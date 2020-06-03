@@ -1,0 +1,102 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+      .center {
+        margin: auto;
+        width: 90%;
+        padding: 10px;
+      }
+      .loginButton {
+        margin: auto;
+        width: 100%;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+      .boldHeader {
+        font-weight: bold;
+        font-size: 20;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .loginForm {
+        margin: auto;
+        width: 90%;
+        padding: 20px;
+        background-color: #97dbd5;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+
+      .content {
+        margin: auto;
+        min-width: 300px;
+        max-width: 30%;
+        padding: 20px;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+        transform: translateY(+30%);
+      }
+
+      .centeredText {
+        text-align: center;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      .bg {
+        background-image: url("bg.png");
+        max-width: 100%;
+        height: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="bg" class="bg">
+      <div id="content" class="content">
+        <p class="centeredText">Online Yearbooks</p>
+        <div id="loginForm" class="loginForm">
+          <div id="continueDiv" class="center">
+            <button type="button" id="signin" name="continue" class="loginButton" onclick="openSignIn()">
+              <p class="boldHeader" id="continueText">Sign In</p>
+            </button>
+          </div>
+          <br />
+          <div id="continueDiv" class="center">
+            <button type="button" id="continue" name="continue" class="loginButton" onclick="openSignUp()">
+              <p class="boldHeader" id="continueText">Sign Up</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-firestore.js"></script>
+
+    <script>
+      function openSignIn() {
+        window.open ('login.html','_self',false)
+      }
+
+      function openSignUp() {
+        window.open ('createaccount.html','_self',false)
+      }
+    </script>
+
+  </body>
+</html>

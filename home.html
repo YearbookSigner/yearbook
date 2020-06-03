@@ -1,0 +1,143 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      .center {
+          text-align: center;
+      }
+      .listItem {
+        margin: auto;
+        width: 95%;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+      .boldHeader {
+        font-weight: bold;
+        font-size: 20;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .content {
+        margin: auto;
+        width: 80%;
+        min-width: 300px;
+        padding: 20px;
+        background-color: #97dbd5;
+        border: none;
+        border-radius: 40px;
+        transform: translateY(100px);
+      }
+
+      .centeredText {
+        text-align: center;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .bg {
+        background-image: url("bg.png");
+        max-width: 100%;
+        height: 100%;
+      }
+
+      .loginButton {
+        margin: auto;
+        width: 25%;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 2px solid #d0d0d0;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="bg" class="bg">
+      <div id="content" class="content">
+        <div id="user-list">
+        </div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-firestore.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyA2Fj-ElygZquh5wqoENTh1TSXPPWGuzKA",
+        authDomain: "yearbooksigner.firebaseapp.com",
+        databaseURL: "https://yearbooksigner.firebaseio.com",
+        projectId: "yearbooksigner",
+        storageBucket: "yearbooksigner.appspot.com",
+        messagingSenderId: "214118912916",
+        appId: "1:214118912916:web:9f6d418e7d5bab8c5ab581"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+      var users = db.collection("users");
+
+      var list = document.getElementById("user-list")
+
+      class User {
+        constructor (username, password) {
+          this.username = username;
+          this.password = password;
+        }
+        toString() {
+          return this.username + ', ' + this.password;
+        }
+      }
+
+      cityConverter = {
+        toFirestore: function(user) {
+          return {
+            name: user.username,
+            password: user.password,
+          }
+        },
+        fromFirestore: function(snapshot, options){
+          const data = snapshot.data(options);
+          return new User(data.username, data.password)
+        }
+      }
+
+      db.collection("users").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          user = doc.data();
+          var li = document.createElement("div");
+          var buttonContainer = document.createElement("div");
+          var text = document.createElement("p");
+          var button = document.createElement("button");
+          text.appendChild(document.createTextNode(user.username));
+          button.appendChild(document.createTextNode("Open"));
+          button.setAttribute('class', "loginButton");
+          button.setAttribute('id', user.username);
+          button.onclick = function() {openUser(this.id);}
+          buttonContainer.appendChild(button);
+          buttonContainer.setAttribute('class', "center");
+          text.setAttribute('class', "centeredText");
+          li.setAttribute('id', user.username);
+          li.setAttribute('class', "listItem");
+          li.appendChild(text);
+          li.appendChild(buttonContainer);
+          list.appendChild(li);
+          list.appendChild(document.createElement("br"));
+        });
+      });
+
+      function openUser(clicked_id)
+      {
+          window.open('account.html?userid=' + clicked_id,'_self',false);
+      }
+
+    </script>
+  </body>
+</html>

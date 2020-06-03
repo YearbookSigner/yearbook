@@ -1,0 +1,164 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+      .center {
+        margin: auto;
+        width: 90%;
+        padding: 10px;
+      }
+      .loginButton {
+        margin: auto;
+        width: 100%;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+      .boldHeader {
+        font-weight: bold;
+        font-size: 20;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .loginForm {
+        margin: auto;
+        width: 90%;
+        padding: 20px;
+        background-color: #97dbd5;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+
+      .content {
+        margin: auto;
+        min-width: 300px;
+        max-width: 30%;
+        padding: 20px;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+        transform: translateY(+30%);
+      }
+
+      .centeredText {
+        text-align: center;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .bg {
+        background-image: url("bg.png");
+        max-width: 100%;
+        height: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="bg" class="bg">
+      <div id="content" class="content">
+        <div id="loginForm" class="loginForm">
+          <div id="usernameDiv" class="center">
+            <label for="username" class="boldHeader">Username</label>
+            <input type="text" id="username" name="username" class="loginButton">
+          </div>
+          <br />
+          <div id="passwordDiv" class="center">
+            <label for="password" class="boldHeader">Password</label>
+            <input type="password" id="password" name="password" class="loginButton">
+          </div>
+          <br />
+          <div id="continueDiv" class="center">
+            <button type="button" id="continue" name="continue" class="loginButton" onclick="loginToAccount()">
+              <p class="boldHeader" id="continueText">Sign In</p>
+            </button>
+          </div>
+        </div>
+        <a href="createaccount.html">
+          <p class="centeredText">Create an account</p>
+        </a>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-firestore.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyA2Fj-ElygZquh5wqoENTh1TSXPPWGuzKA",
+        authDomain: "yearbooksigner.firebaseapp.com",
+        databaseURL: "https://yearbooksigner.firebaseio.com",
+        projectId: "yearbooksigner",
+        storageBucket: "yearbooksigner.appspot.com",
+        messagingSenderId: "214118912916",
+        appId: "1:214118912916:web:9f6d418e7d5bab8c5ab581"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+      var users = db.collection("users");
+
+
+      var signinButton = document.getElementById('continue');
+      var continueText = document.getElementById('continueText');
+      var usernameField = document.getElementById('username');
+      var passwordField1 = document.getElementById('password');
+
+      class User {
+        constructor (username, password) {
+          this.username = username;
+          this.password = password;
+        }
+        toString() {
+          return this.username + ', ' + this.password;
+        }
+      }
+
+      cityConverter = {
+        toFirestore: function(user) {
+          return {
+            name: user.username,
+            password: user.password,
+          }
+        },
+        fromFirestore: function(snapshot, options){
+          const data = snapshot.data(options);
+          return new User(data.username, data.password)
+        }
+      }
+
+      function loginToAccount() {
+        users.doc(usernameField.value).withConverter(cityConverter).get().then(function(doc) {
+          if (doc.exists) {
+            user = doc.data();
+            if (user.password == passwordField1.value) {
+              document.cookie = user.username;
+              continueText.innerHTML = "Login Successful";
+              setTimeout(() => {  window.open ('home.html','_self',false) }, 2000);
+            } else {
+              continueText.innerHTML = "Incorrect Password!"
+              usernameField.value = "";
+              passwordField1.value = "";
+              setTimeout(() => {  continueText.innerHTML = "Sign In"; }, 2000);
+            }
+          } else {
+            continueText.innerHTML = "This user does not exist!"
+            usernameField.value = "";
+            passwordField1.value = "";
+            setTimeout(() => {  continueText.innerHTML = "Sign In"; }, 2000);
+          }
+        })
+      }
+    </script>
+
+  </body>
+</html>

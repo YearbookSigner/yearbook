@@ -1,0 +1,142 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      .center {
+        margin: auto;
+        width: 90%;
+        padding: 10px;
+      }
+      .loginButton {
+        margin: auto;
+        width: 100%;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+      .boldHeader {
+        font-weight: bold;
+        font-size: 20;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .loginForm {
+        margin: auto;
+        width: 90%;
+        padding: 20px;
+        background-color: #97dbd5;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+
+      .content {
+        margin: auto;
+        min-width: 300px;
+        max-width: 30%;
+        padding: 20px;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+        transform: translateY(+20%);
+      }
+
+      .centeredText {
+        text-align: center;
+        font-family: 'Ubuntu', sans-serif;
+      }
+
+      .bg {
+        background-image: url("bg.png");
+        max-width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg" class="bg">
+      <div id="content" class="content">
+        <div id="loginForm" class="loginForm">
+          <div id="usernameDiv" class="center">
+            <label for="username" class="boldHeader">Name</label>
+            <input type="text" id="username" name="username" class="loginButton">
+          </div>
+          <br />
+          <div id="passwordDiv" class="center">
+            <label for="password" class="boldHeader">Password</label>
+            <input type="password" id="password" name="password" class="loginButton">
+          </div>
+          <br />
+          <div id="retypePasswordDiv" class="center">
+            <label for="password" class="boldHeader">Password (again)</label>
+            <input type="password" id="password1" name="password" class="loginButton">
+          </div>
+          <br />
+          <div id="continueDiv" class="center">
+            <button type="button" id="continue" name="continue" class="loginButton" onclick="makeAccount()">
+              <p class="boldHeader" id="continueText">Sign Up</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-firestore.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyA2Fj-ElygZquh5wqoENTh1TSXPPWGuzKA",
+        authDomain: "yearbooksigner.firebaseapp.com",
+        databaseURL: "https://yearbooksigner.firebaseio.com",
+        projectId: "yearbooksigner",
+        storageBucket: "yearbooksigner.appspot.com",
+        messagingSenderId: "214118912916",
+        appId: "1:214118912916:web:9f6d418e7d5bab8c5ab581"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+
+      var signinButton = document.getElementById('continue');
+      var continueText = document.getElementById('continueText');
+      var usernameField = document.getElementById('username');
+      var passwordField1 = document.getElementById('password');
+      var passwordField2 = document.getElementById('password1');
+
+
+      function makeAccount() {
+        if (passwordField1.value == passwordField2.value) {
+          if (passwordField1.value != "") {
+            if (usernameField.value != "") {
+              db.collection("users").doc(usernameField.value).set({
+                username: usernameField.value,
+                password: passwordField1.value
+              })
+              continueText.innerHTML = "You are now signed up!";
+              setTimeout(() => {  window.open ('login.html','_self',false) }, 2000);
+            } else {
+              continueText.innerHTML = "You must enter a username!";
+              setTimeout(() => {  continueText.innerHTML = "Sign Up"; }, 2000);
+            }
+          } else {
+            continueText.innerHTML = "You must enter a password!";
+            setTimeout(() => {  continueText.innerHTML = "Sign Up"; }, 2000);
+          }
+        } else {
+          continueText.innerHTML = "Your passwords do not match!";
+          setTimeout(() => {  continueText.innerHTML = "Sign Up"; }, 2000);
+        }
+      }
+    </script>
+
+  </body>
+</html>
