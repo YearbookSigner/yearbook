@@ -55,11 +55,32 @@
         font-size: 15;
       }
 
+      .search {
+        width: 100%;
+        margin: auto;
+        text-align: center;
+      }
+
+      .searchField {
+        margin: auto;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: none;
+        color: black;
+        border-radius: 40px;
+        font-size: 15;
+      }
+
     </style>
   </head>
   <body>
     <div id="bg" class="bg">
       <div id="content" class="content">
+        <div id="search" class="search">
+          <input type="text" class="searchField" id="searchField"></input>
+          <button class="loginButton" onclick="search()">Search</button>
+        </div>
+        <br />
         <div id="user-list">
         </div>
       </div>
@@ -85,6 +106,7 @@
       var users = db.collection("users");
 
       var list = document.getElementById("user-list")
+      var searchField = document.getElementById("searchField");
 
       class User {
         constructor (username, password) {
@@ -109,29 +131,47 @@
         }
       }
 
-      db.collection("users").get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          user = doc.data();
-          var li = document.createElement("div");
-          var buttonContainer = document.createElement("div");
-          var text = document.createElement("p");
-          var button = document.createElement("button");
-          text.appendChild(document.createTextNode(user.username));
-          button.appendChild(document.createTextNode("Open"));
-          button.setAttribute('class', "loginButton");
-          button.setAttribute('id', user.username);
-          button.onclick = function() {openUser(this.id);}
-          buttonContainer.appendChild(button);
-          buttonContainer.setAttribute('class', "center");
-          text.setAttribute('class', "centeredText");
-          li.setAttribute('id', user.username);
-          li.setAttribute('class', "listItem");
-          li.appendChild(text);
-          li.appendChild(buttonContainer);
-          list.appendChild(li);
-          list.appendChild(document.createElement("br"));
+      removeAllChildNodes(list);
+      queryUsers();
+
+      function search() {
+        removeAllChildNodes(list);
+        queryUsers();
+      }
+
+      function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+          parent.removeChild(parent.firstChild);
+        }
+      }
+
+      function queryUsers() {
+        db.collection("users").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            user = doc.data();
+            if (user.username.includes(searchField.value)) {
+              var li = document.createElement("div");
+              var buttonContainer = document.createElement("div");
+              var text = document.createElement("p");
+              var button = document.createElement("button");
+              text.appendChild(document.createTextNode(user.username));
+              button.appendChild(document.createTextNode("Open"));
+              button.setAttribute('class', "loginButton");
+              button.setAttribute('id', user.username);
+              button.onclick = function() {openUser(this.id);}
+              buttonContainer.appendChild(button);
+              buttonContainer.setAttribute('class', "center");
+              text.setAttribute('class', "centeredText");
+              li.setAttribute('id', user.username);
+              li.setAttribute('class', "listItem");
+              li.appendChild(text);
+              li.appendChild(buttonContainer);
+              list.appendChild(li);
+              list.appendChild(document.createElement("br"));
+            }
+          });
         });
-      });
+      }
 
       function openUser(clicked_id)
       {
